@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/task_provider.dart';
 import '../widgets/task_tile.dart';
+import '../themes/app_theme.dart';
 import 'task_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final Function(bool) changeTheme;
+
+  const HomeScreen({
+    super.key,
+    required this.changeTheme,
+  });
 
   @override
   State<HomeScreen> createState() =>
@@ -38,6 +43,13 @@ class _HomeScreenState
                 FontWeight.bold,
           ),
         ),
+
+        actions: [
+          AppTheme(
+            changeTheme:
+                widget.changeTheme,
+          ),
+        ],
       ),
 
       floatingActionButton:
@@ -51,9 +63,8 @@ class _HomeScreenState
             ),
           );
         },
-        child: const Icon(
-          Icons.add,
-        ),
+        child:
+            const Icon(Icons.add),
       ),
 
       body: SafeArea(
@@ -84,10 +95,16 @@ class _HomeScreenState
                 'Stay organized today',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black
-                      .withOpacity(
-                    0.6,
-                  ),
+                  color:
+                      Theme.of(
+                            context,
+                          )
+                          .textTheme
+                          .bodyMedium
+                          ?.color
+                          ?.withOpacity(
+                            0.7,
+                          ),
                 ),
               ),
 
@@ -105,21 +122,6 @@ class _HomeScreenState
                   prefixIcon:
                       const Icon(
                     Icons.search,
-                  ),
-                  filled: true,
-                  fillColor:
-                      Colors
-                          .grey
-                          .shade200,
-                  border:
-                      OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius
-                            .circular(
-                      15,
-                    ),
-                    borderSide:
-                        BorderSide.none,
                   ),
                 ),
               ),
@@ -190,7 +192,8 @@ class _HomeScreenState
 
                             onDelete:
                                 () {
-                              provider.removeTask(
+                              provider
+                                  .removeTask(
                                 index,
                               );
                             },

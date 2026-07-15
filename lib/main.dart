@@ -1,26 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/providers/task_provider.dart';
-import 'package:flutter_application_1/screens/home_screen.dart';
 import 'package:provider/provider.dart';
+import 'providers/task_provider.dart';
+import 'screens/home_screen.dart';
 
-void main(){
+void main() {
   runApp(
     ChangeNotifierProvider(
       create: (_) => TaskProvider(),
-      child: const TodoAPP(),
-      )
-    );
+      child: const TodoApp(),
+    ),
+  );
 }
 
-class TodoAPP extends StatelessWidget {
-  const TodoAPP({super.key});
+class TodoApp extends StatefulWidget {
+  const TodoApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<TodoApp> createState() =>
+      _TodoAppState();
+}
+
+class _TodoAppState
+    extends State<TodoApp> {
+
+  ThemeMode _themeMode = ThemeMode.light;
+
+  void changeTheme(bool isDark) {
+    setState(() {
+      _themeMode =
+          isDark
+              ? ThemeMode.dark
+              : ThemeMode.light;
+    });
+  }
+
+  @override
+  Widget build(
+      BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'TO-DO APP',
-      home: HomeScreen(),
+      debugShowCheckedModeBanner:
+          false,
+
+      title: 'ToDo App',
+
+      theme: ThemeData(
+        useMaterial3: true, 
+        brightness: Brightness.light,
+      ),
+
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.dark,
+      ),
+
+      themeMode: _themeMode,
+
+      home: HomeScreen(
+        changeTheme:
+            changeTheme,
+      ),
     );
   }
 }

@@ -1,29 +1,17 @@
 import 'package:flutter/material.dart';
 import '../models/task.dart';
 
-class TaskTile extends StatefulWidget {
+class TaskTile extends StatelessWidget {
   const TaskTile({
     super.key,
     required this.taskTile,
+    required this.onTap,
+    required this.onDelete,
   });
 
   final Task taskTile;
-
-  @override
-  State<TaskTile> createState() =>
-      _TaskTileState();
-}
-
-class _TaskTileState
-    extends State<TaskTile> {
-
-  bool _isFilled = false;
-
-  void _toggleFill() {
-    setState(() {
-      _isFilled = !_isFilled;
-    });
-  }
+  final VoidCallback onTap;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -33,35 +21,29 @@ class _TaskTileState
         borderRadius:
             BorderRadius.circular(15),
       ),
-
       child: Padding(
         padding:
             const EdgeInsets.all(16),
-
         child: Row(
           children: [
 
             GestureDetector(
-              onTap: _toggleFill,
-
+              onTap: onTap,
               child: AnimatedContainer(
                 duration:
                     const Duration(
                   milliseconds: 300,
                 ),
-
                 width: 30,
                 height: 30,
-
                 decoration:
                     BoxDecoration(
                   shape:
                       BoxShape.circle,
-
-                  color: _isFilled
-                      ? Colors.green
-                      : Colors.white,
-
+                  color:
+                      taskTile.isCompleted
+                          ? Colors.green
+                          : Colors.white,
                   border:
                       Border.all(
                     color:
@@ -69,15 +51,15 @@ class _TaskTileState
                     width: 3,
                   ),
                 ),
-
-                child: _isFilled
-                    ? const Icon(
-                        Icons.check,
-                        color:
-                            Colors.white,
-                        size: 18,
-                      )
-                    : null,
+                child:
+                    taskTile.isCompleted
+                        ? const Icon(
+                            Icons.check,
+                            color:
+                                Colors.white,
+                            size: 18,
+                          )
+                        : null,
               ),
             ),
 
@@ -88,17 +70,22 @@ class _TaskTileState
                 crossAxisAlignment:
                     CrossAxisAlignment
                         .start,
-
                 children: [
 
                   Text(
-                    widget.taskTile.label,
+                    taskTile.label,
                     style:
-                        const TextStyle(
+                        TextStyle(
                       fontSize: 18,
                       fontWeight:
                           FontWeight
                               .bold,
+                      decoration:
+                          taskTile
+                                  .isCompleted
+                              ? TextDecoration
+                                  .lineThrough
+                              : null,
                     ),
                   ),
 
@@ -107,10 +94,9 @@ class _TaskTileState
                   ),
 
                   Text(
-                    "${widget.taskTile.dateTime.day}/"
-                    "${widget.taskTile.dateTime.month}/"
-                    "${widget.taskTile.dateTime.year}",
-
+                    "${taskTile.dateTime.day}/"
+                    "${taskTile.dateTime.month}/"
+                    "${taskTile.dateTime.year}",
                     style:
                         const TextStyle(
                       color:
@@ -122,8 +108,7 @@ class _TaskTileState
             ),
 
             IconButton(
-              onPressed: () {},
-
+              onPressed: onDelete,
               icon: const Icon(
                 Icons.delete,
                 color: Colors.red,
